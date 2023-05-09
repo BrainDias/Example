@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.auth.RegistrationForm;
 import com.example.demo.entities.User;
 import com.example.demo.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +41,10 @@ public class UserController {
         return new ResponseEntity<>(users,HttpStatus.FOUND);
     }
     @PostMapping("/")
-    public HttpStatus signUp(@RequestBody User user){
+    public String signUp(@RequestBody RegistrationForm form){
         //TODO Check if all attributes are present
-//        userRepository.save(user);
-        return HttpStatus.CREATED;
+        userRepository.save(form.getUserInstance(encoder));
+        return "redirect:/login";
     }
 
     @GetMapping("/online/{count}")
@@ -52,22 +53,10 @@ public class UserController {
         return new ResponseEntity<>(userRepository.findAllByOnline(pageRequest),HttpStatus.FOUND);
     }
 
-    @GetMapping("/trialexpired/{count}")
-    public ResponseEntity<Iterable<User>> usersWhosTrialExpired(@PathVariable int count){
-        PageRequest pageRequest = PageRequest.of(0,count);
-        return new ResponseEntity<>(userRepository.findAllByTrialExpired(pageRequest),HttpStatus.FOUND);
-    }
     @DeleteMapping("/")
     public HttpStatus deleteAccount(){
         //TODO Make application store the user session so that it would know which user to delete
 //        userRepository.delete(user);
         return HttpStatus.GONE;
-    }
-    @PatchMapping("/trial")
-    public HttpStatus startTrial(){
-//        User user = userRepository.find(?);
-//        user.setTrialExpired(false);
-//        userRepository.save(user);
-        return HttpStatus.ACCEPTED;
     }
 }
