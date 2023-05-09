@@ -4,9 +4,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.CreditCardNumber;
 import org.springframework.lang.NonNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,7 +19,8 @@ import java.util.Arrays;
 import java.util.Collection;
 
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor(force = true)
+@AllArgsConstructor
 @Entity
 public class User implements UserDetails {
 
@@ -25,27 +29,27 @@ public class User implements UserDetails {
     private Long id;
 
     @NonNull
-    private final String username;
+    private  String username;
     @NonNull
-    private final String password;
+    private  String password;
+    @Pattern(regexp = "^*@(gmail)|(yahoo).(com)|(ua)$")
+    private  String email;
+    @Digits(integer = 10,fraction = 0,message = "Invalid phone number")
+    private  Long phoneNumber;
+    @CreditCardNumber
+    public String creditCardNumber;
+    @Digits(integer = 3,fraction = 0,message = "Invalid CVV")
+    private  String CVV;
+    @Pattern(regexp = "^(0[1-9])|(1[0-2])/2[3-9]$")
+    private  String expirationDate;
+    @Digits(integer = 5,fraction = 0,message = "Invalid ZIP")
+    private  String zipCode;
     @NonNull
-    private final String email;
+    private  String firstName;
     @NonNull
-    private final Long phoneNumber;
+    private  String lastName;
     @NonNull
-    private final String creditCardNumber;
-    @NonNull
-    private final String CVV;
-    @NonNull
-    private final String zipCode;
-    @NonNull
-    private final String firstName;
-    @NonNull
-    private final String lastName;
-    @NonNull
-    private final boolean trialExpired;
-    @NonNull
-    private final boolean isOnline;
+    private  boolean isOnline;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
